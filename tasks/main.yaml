@@ -1,0 +1,49 @@
+---
+- name: "Fail if OS/Architecture is not supported"
+  fail:
+    msg: "Configuring kubernetes-repository on {{ (ansible_os_family | lower) + '_' + (ansible_architecture | lower) }} is unsupported."
+  when:
+    - "(configure_kubernetes_repository | default({}))[(ansible_os_family | lower) + '_' + (ansible_architecture | lower)] is not defined"
+    - "kubernetes_repository is defined"
+  tags:
+    - "kubernetes-repository"
+- name: "Add GPG key(s) to apt"
+  apt_key:
+    url: "{{ item.url }}"
+    state: present
+  with_items: "{{ configure_kubernetes_repository[(ansible_os_family | lower) + '_' + (ansible_architecture | lower)].apt_key | default([]) }}"
+  when:
+    - "kubernetes_repository is defined"
+  tags:
+    - "kubernetes-repository"
+- name: "Add GPG key(s) to rpm"
+  rpm_key:
+    fingerprint: "{{ item.fingerprint }}"
+    key: "{{ item.key }}"
+    state: present
+  with_items: "{{ configure_kubernetes_repository[(ansible_os_family | lower) + '_' + (ansible_architecture | lower)].rpm_key | default([]) }}"
+  when:
+    - "kubernetes_repository is defined"
+  tags:
+    - "kubernetes-repository"
+- name: "Add apt repository(s)"
+  apt_repository:
+    repo: "{{ item.repo }}"
+    state: "present"
+  with_items: "{{ configure_kubernetes_repository[(ansible_os_family | lower) + '_' + (ansible_architecture | lower)].apt_repository | default([]) }}"
+  when:
+    - "kubernetes_repository is defined"
+  tags:
+    - "kubernetes-repository"
+- name: "Add yum repository(s)"
+  yum_repository:
+    name: "{{ item.name }}"
+    description: "{{ item.description }}"
+    baseurl: "{{ item.baseurl}}"
+    repo_gpgcheck: "{{ item.repo_gpgcheck }}"
+    gpgkey: "{{ item.gpgkey }}"
+  with_items: "{{ configure_kubernetes_repository[(ansible_os_family | lower) + '_' + (ansible_architecture | lower)].yum_repository | default([]) }}"
+  when:
+    - "kubernetes_repository is defined"
+  tags:
+    - "kubernetes-repository"
