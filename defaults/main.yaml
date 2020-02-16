@@ -14,7 +14,7 @@ configure_kubernetes_repository:
             fingerprint: "3749E1BA95A86CE054546ED2F09C394C3E1BA8D5"
   raspbian: &raspbian
     apt_repository:
-      - repo: "deb https://apt.kubernetes.io/ kubernetes-xenial main"
+      - repo: "deb http://packages.cloud.google.com/apt/ kubernetes-xenial main"
         gpgkey:
           - key: "https://packages.cloud.google.com/apt/doc/apt-key.gpg"
             fingerprint: "54A647F9048D5688D7DA2ABE6A030B21BA07F4FB"
