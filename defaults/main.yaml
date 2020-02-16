@@ -2,22 +2,19 @@
 kubernetes_repository: true
 configure_kubernetes_repository:
   centos: &centos
-    yum_repository: # Add kubernetes repository
+    yum_repository:
       - name: "kubernetes"
         description: "Kubernetes"
         baseurl: "https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64"
         repo_gpgcheck: "yes"
         gpgkey:
-          - "https://packages.cloud.google.com/yum/doc/yum-key.gpg"
-          - "https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
-    rpm_key:
-      - key: "https://packages.cloud.google.com/yum/doc/yum-key.gpg"
-      - key: "https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+          - key: "https://packages.cloud.google.com/yum/doc/yum-key.gpg"
+          - key: "https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg"
   raspbian: &raspbian
-    apt_key: # Add Kubernetes’s official GPG key:
-      - url: "https://packages.cloud.google.com/apt/doc/apt-key.gpg"
-    apt_repository: #  Add Kubernetes apt repository.
+    apt_repository:
       - repo: "deb https://apt.kubernetes.io/ kubernetes-xenial main"
+        gpgkey:
+          - key: "https://packages.cloud.google.com/apt/doc/apt-key.gpg"
   debian_armv7l: *raspbian
   debian_armv6l: *raspbian
   redhat_x86_64: *centos
